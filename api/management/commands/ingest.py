@@ -7,5 +7,10 @@ class Command(BaseCommand):
     help = 'Ingest data from csv to postgres'
 
     def handle(self, *args, **options):
-        ingest = Ingest()
-        ingest.handle()
+        try:
+            ingest = Ingest()
+            ingest.handle()
+
+            self.stdout.write("Data imported successfully!")
+        except:
+            self.stdout.write("An error occurred!")
