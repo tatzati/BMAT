@@ -4,14 +4,14 @@
 ## Execute with docker compose
 
 ```
-$ docker compose up -d
+$ docker compose up
 ```
 
 ### Part 1
 You can run this command to import the csv data to the database.
 The csv file is already at the appropriate location: /import/works_metadata.csv
 ```
-docker-compose run web python3 manage.py ingest
+docker-compose run api python3 manage.py ingest
 ```
 
 You can run tests with this command:
