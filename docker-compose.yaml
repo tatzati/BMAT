@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: api
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: 'api:latest'
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_DIALECT: postgres
+      DB_HOST: postgres
+      DB_NAME: music_db
+      DB_USERNAME: admin
+      DB_PASSWORD: admin1234
+      DB_PORT: 5432
+    volumes:
+      - .:/app
+
+  postgres:
+    container_name: 'postgres'
+    image: 'postgres:14.5'
+    expose:
+      - '5432'
+#    volumes:
+#      - 'pgdata:/var/lib/postgresql/data/'
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin1234
+      POSTGRES_DB: music_db
+      PGDATA: /data/postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "music_db", "-U", "admin" ]
+      interval : 5s
+      timeout : 5s
+      retries : 5
